@@ -121,7 +121,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         M0_ini = np.array(Ev_per_patch["M0"])[loc_cut:]
         M0_ini = [float(i) for i in M0_ini]
         area_ini = np.array(Ev_per_patch["area"])[loc_cut:]
-        num_events_ini = list(range(1, len(M_ini) + 1)) + loc_cut  # (⚠️ potser revisable)
+        num_events_ini = list(range(1, len(M_ini) + 1)) + loc_cut
         x_ini = np.array(Ev_per_patch["x"])[loc_cut:]
         y_ini = np.array(Ev_per_patch["y"])[loc_cut:]
         z_ini = np.array(Ev_per_patch["z"])[loc_cut:]
