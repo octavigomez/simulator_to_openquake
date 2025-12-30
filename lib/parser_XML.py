@@ -30,7 +30,7 @@ def parse_ruptures(rupt_cat):
         coords = row[4].split()
         # Group coordinates into (lon, lat, z) tuples
         pos_list = []
-        if len(coords) > 15:
+        if len(coords) > 4:
             for i in range(0, len(coords), 3):
                 if i + 2 < len(coords):
                     lon, lat, z = coords[i], coords[i + 1], coords[i + 2]
