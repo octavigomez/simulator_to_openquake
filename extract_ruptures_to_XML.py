@@ -40,7 +40,7 @@ from lib.parser_XML import parse_ruptures, create_xml
 warnings.filterwarnings("ignore")
 path = os.getcwd()
 path = os.path.abspath(os.path.join(path, "../../"))
-path_in = "Your path to the general folder where the catalogues are located"
+path_in = "/home/octavi/Documentos/MCQsim-main/run_diss_2km/ASCII_cat"
 
 # ============================================================
 # GLOBAL PARAMETERS
@@ -48,7 +48,7 @@ path_in = "Your path to the general folder where the catalogues are located"
 it = -1
 m_filtering = 5.5     # Magnitude threshold for rupture extraction
 cut_year = 10000
-time_windows = [50000]
+time_windows = [100000]
 patch_threshold = 0
 
 # ============================================================
@@ -63,8 +63,8 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
     # ------------------------------------------------------------
     # READ INPUT CSV GEOMETRY
     # ------------------------------------------------------------
-    file = os.path.join(folder, "EBSZ_modif2.csv")
-    input_file = pd.read_csv(file, delimiter=";", header=None)
+    file = os.path.join(folder, "Fault_model.txt")
+    input_file = pd.read_csv(file, delimiter="\t", header=None)
     n = 1000
     it = it + 1
 

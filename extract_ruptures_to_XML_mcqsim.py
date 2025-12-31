@@ -40,13 +40,13 @@ from pyproj import Transformer
 warnings.filterwarnings("ignore")
 path = os.getcwd()
 path = os.path.abspath(os.path.join(path, "../../"))
-path_in = r"C:\Users\Octavi Gomez\Documents\Software\simulator_to_openquake\diss_faults"
+path_in = "/home/octavi/Documentos/MCQsim-main/run_diss_2km/ASCII_cat"
 
 # ============================================================
 # GLOBAL PARAMETERS
 # ============================================================
 it = -1
-m_filtering = 6.5     # Magnitude threshold for rupture extraction
+m_filtering = 5.9    # Magnitude threshold for rupture extraction
 cut_year = 5000
 time_windows = [100000]
 patch_threshold = 0
