@@ -6,11 +6,11 @@ of the simulated catalogue length.
 
 ## Key Features
 
-🧩 Simulator Integration – Reads and processes rupture catalogs from numerical earthquake simulators.
+A. Earthquake simulator data processing – Reads and processes synthetic earthquake rupture catalogs from  earthquake cycle simulators (RSQSim and MCQsim).
 
-🔄 Format Conversion – Translates rupture data into OpenQuake XML format.
+B. Pipeline to PSHA – Translates earthquake rupture data (extent, rake, magnitude) into OpenQuake XML format (for now: gridded surfaces modelled characteristic ruptures for classical PSHA).
 
-⚙️ Customizable Workflow – Modular scripts that can be adapted to different simulators and fault geometries.
+C. Customizable –  Scripts can be adapted to different simulators and fault geometries.
 
 ## Codes and structure
 
