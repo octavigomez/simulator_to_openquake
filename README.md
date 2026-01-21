@@ -10,7 +10,7 @@ A. Earthquake simulator data processing – Reads and processes synthetic earthq
 
 B. Pipeline to PSHA – Translates earthquake rupture data (extent, rake, magnitude) into OpenQuake XML format (for now: gridded surfaces modelled characteristic ruptures for classical PSHA).
 
-C. Customizable –  Scripts can be adapted to different simulators and fault geometries.
+C. Customizable –  Scripts can be adapted to different simulators and fault geometries. For now we provide solutions for RSQSim and MCQsim.
 
 ## Codes and structure
 
