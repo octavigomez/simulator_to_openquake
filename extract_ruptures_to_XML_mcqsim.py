@@ -40,13 +40,13 @@ from pyproj import Transformer
 warnings.filterwarnings("ignore")
 path = os.getcwd()
 path = os.path.abspath(os.path.join(path, "../../"))
-path_in = "/home/octavi/Documentos/MCQsim-main/run_diss_2km/ASCII_cat"
+path_in = "C:/Users\Octavi Gomez\OneDrive - INSTITUTO GEOLÓGICO Y MINERO DE ESPAÑA\Software\simulator_to_openquake/diss_faults/khatereh"
 
 # ============================================================
 # GLOBAL PARAMETERS
 # ============================================================
 it = -1
-m_filtering = 5.9    # Magnitude threshold for rupture extraction
+m_filtering = 5.5    # Magnitude threshold for rupture extraction
 cut_year = 5000
 time_windows = [100000]
 patch_threshold = 0
@@ -56,6 +56,7 @@ patch_threshold = 0
 # ============================================================
 for folder_name in natsort.natsorted(os.listdir(path_in)):
     folder = os.path.join(path_in, folder_name)
+    print(folder)
     if not os.path.isdir(folder):
         continue
     print(folder)
@@ -83,7 +84,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
     y_center = (y1 + y2 + y3) / 3
     z_center = (z1 + z2 + z3) / 3
 
-    transformer = Transformer.from_crs("EPSG:3035","EPSG:4326",  always_xy=True)
+    transformer = Transformer.from_crs("EPSG:32633","EPSG:4326",  always_xy=True)
     x_center_deg, y_center_deg = transformer.transform(x_center, y_center)
 
     x_center_deg = np.round(x_center_deg, 4)
@@ -290,6 +291,6 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         # in the "path_in" variable.
 
         ruptures = parse_ruptures(table_rupture)
-        create_xml(ruptures, path_in + '/ruptures'+str(it)+'.xml')
+        create_xml(ruptures, folder + '/ruptures'+str(it)+'.xml')
 
         print(f"Successfully converted {len(ruptures)} ruptures to XML format.")
