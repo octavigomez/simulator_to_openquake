@@ -227,6 +227,9 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         area_ini = np.array(area_ini)[idx_Mc]
         num_events_ini = np.array(num_events_ini)[idx_Mc]
         t0_ini = np.array(t0_ini)[idx_Mc]
+        x_ini = x_ini[idx_Mc]
+        y_ini = y_ini[idx_Mc]
+        z_ini = z_ini[idx_Mc]
 
         idx_Mc_all = np.where(np.isin(eList_ini, num_events_ini))[0]
         eList_ini = np.float64(eList_ini[idx_Mc_all])
@@ -250,6 +253,9 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         M0 = np.array(M0_ini)[time_loc]
         area = np.array(area_ini)[time_loc]
         num_events = np.array(num_events_ini)[time_loc]
+        x = x_ini[time_loc]
+        y = y_ini[time_loc]
+        z = z_ini[time_loc]
 
         hist, bins = np.histogram(M, bins=mag_range)
         Mc = bins[np.argmax(hist)]
@@ -259,6 +265,9 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         area = area[idx_Mc]
         num_events = num_events[idx_Mc]
         t0 = t0[idx_Mc]
+        x = x_ini[idx_Mc]
+        y = y_ini[idx_Mc]
+        z = z_ini[idx_Mc]
 
         idx_Mc_all = np.where(np.isin(eList_ini, num_events))[0]
         eList = np.float64(eList_ini[idx_Mc_all])
@@ -292,6 +301,12 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         all_dList_re= []
         all_tList_re = []
         all_moment_percs = []
+        all_x = []
+        all_y = []
+        all_z = []
+        centroid_x_re_all =[]
+        centroid_y_re_all =[]
+        centroid_z_re_all =[]
 
         ev = 0
         for c, i in enumerate(M_filter):
@@ -512,6 +527,9 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                     pList_re = []
                     dList_re = []
                     tList_re = []
+                    centroid_x_re = []
+                    centroid_y_re = []
+                    centroid_z_re = []
 
                     #plt.scatter(x_center_deg, y_center_deg, marker='o', s=2, c="grey", zorder=1)
                     for re in range(len(components)):
@@ -524,6 +542,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                         mom = np.sum(area * slip) * 3e10
                         mag = round(2/3*(np.log10(mom)-9.1),2)
                         ts = np.min(tList_filt[loc_cluster_n])
+                        loc_time = np.where(tList_filt[loc_cluster_n]==np.min(tList_filt[loc_cluster_n]))[0][0]
                         mags.append(mag)
                         moms.append(mom)
                         areas.append(area_sum)
@@ -536,6 +555,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                         dList_re.append(sls)
                         tList_re.append(tms)
 
+
                         # ============================================================
                         # PREPARE TABLE FOR RUPTURE EXPORT TO XML
                         # ============================================================
@@ -543,6 +563,14 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                         x_patch = x_center_deg[pList_fil][loc_cluster_n]
                         y_patch = y_center_deg[pList_fil][loc_cluster_n]
                         z_patch = np.array(z_center_deg[pList_fil][loc_cluster_n])
+
+                        x_re.append(x_patch[loc_time])
+                        y_re.append(y_patch[loc_time])
+                        z_re.append(z_patch[loc_time])
+
+                        centroid_x_re.append(np.mean(x_patch))
+                        centroid_x_re.append(np.mean(y_patch))
+                        centroid_z_re.append(np.mean(z_patch))
 
 
                         #plt.scatter(x_patch, y_patch, marker='o', s=10, zorder=2)
@@ -574,6 +602,12 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                     all_pList_re.append(pList_re)
                     all_dList_re.append(dList_re)
                     all_tList_re.append(tList_re)
+                    all_x.append(x_re)
+                    all_y.append(y_re)
+                    all_z.append(z_re)
+                    centroid_x_re_all.append(centroid_x_re)
+                    centroid_y_re_all.append(centroid_y_re)
+                    centroid_z_re_all.append(centroid_z_re)
 
 
 
@@ -587,6 +621,12 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         all_areas = np.array([x for row in all_areas for x in row])
         all_times = np.array([x for row in all_times for x in row])
         all_moms = np.array([x for row in all_moms for x in row])
+        all_x = np.array([x for row in all_x for x in row])
+        all_y = np.array([x for row in all_y for x in row])
+        all_z = np.array([x for row in all_z for x in row])
+        centroid_x_re_all= np.array([x for row in centroid_x_re_all for x in row])
+        centroid_y_re_all= np.array([x for row in centroid_y_re_all for x in row])
+        centroid_z_re_all= np.array([x for row in centroid_z_re_all for x in row])
         all_eList_re = np.concatenate([x for row in all_eList_re for x in row])
         all_pList_re = np.concatenate([x for row in all_pList_re for x in row])
         all_dList_re = np.concatenate([x for row in all_dList_re for x in row])
@@ -604,6 +644,15 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
 
         rate_ini = hist_ini/time_window
         rate_after = hist_after/time_window
+
+        # b-value
+
+        Mc_after = mag_range[np.argmax(hist_after)]
+        Mc_after = m_filtering
+        M_complete = all_final_magnitudes[all_final_magnitudes >= Mc_after]
+        deltaM = 0.1
+        b = (np.log10(np.exp(1))) / (np.mean(M_complete) - (Mc_after - deltaM/2))
+        print("b-value = ", b)
 
         # Export both GR distributions
 
@@ -628,6 +677,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         plt.legend()
         plt.yscale('log')
         plt.xlim(min(M), 8)
+        plt.title("b-value_filtered ="+str(round(b,2)))
         plt.show()
 
 
@@ -694,124 +744,54 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
         plt.grid("on", which="major", linestyle=":", zorder=0)
         plt.show()
 
+        # Depth histograms
 
-        #
-        #         # ============================================================
-        #         # RECOMPUTE MAGNITUDES OF EVENTS AFTER CLEANING (check)
-        #         # ============================================================
-        #
-        #         # Initial magnitude
-        #
-        #         avg_slip = np.mean(dList_fil)
-        #         moment = 3e10*avg_slip*area[M_filter_id][c]
-        #         magnitude = 2/3*(np.log10(moment)-9.1)
-        #
-        #         # Posterior magnitude
-        #
-        #         area_filter = area[M_filter_id][c] - (np.sum(areas_tris[pList_fil_min]) + np.sum(areas_tris[pList_fil][noise_loc]))
-        #         avg_slip_filt = np.mean(dList_fil[loc_slip][cluster_loc])
-        #         moment_filt = 3e10 * avg_slip_filt *area_filter
-        #         magnitude_filt = 2/3*(np.log10(moment_filt)-9.1)
-        #         magnitudes.append(magnitude)
-        #         magnitudes_filt.append(magnitude_filt)
-        #         magnitude_change = magnitude-magnitude_filt
-        #         changes.append(magnitude_change)
-        #         patches_removed = len(pList_fil_min)+ len(noise_loc)
-        #         all_removed.append(patches_removed)
-        #
-        #         # ============================================================
-        #         # FINAL VISUALIZATION
-        #         # ============================================================
-        #
-        #         # plt.scatter(x_center_deg, y_center_deg, c="grey", s=4)
-        #         # cbar = plt.scatter(x_patch, y_patch, c=dList_fil[loc_slip][cluster_loc], s=4)
-        #         # plt.scatter(x_patch_min, y_patch_min, c="red", label = "removed-slip", s=4)
-        #         # plt.scatter(x_center_deg[pList_fil][noise_loc], y_center_deg[pList_fil][noise_loc], c="red", label="removed-clust", s=2)
-        #         # plt.colorbar(cbar)
-        #         # plt.legend()
-        #         # plt.title("Removed = " + str(len(noise_loc) + len(loc_slip_min)) + " elements")
-        #         # if len(noise_loc)>0:
-        #         #     plt.xlim(min([min(x_center_deg[pList_fil][noise_loc]), min(x_patch)]), max([max(x_center_deg[pList_fil][noise_loc]), max(x_patch)]))
-        #         #     plt.ylim(min([min(y_center_deg[pList_fil][noise_loc]), min(y_patch)]),
-        #         #              max([max(y_center_deg[pList_fil][noise_loc]), max(y_patch)]))
-        #         # else:
-        #         #     plt.xlim(min(x_patch)-0.1, max(x_patch)+0.1)
-        #         #     plt.ylim(min(y_patch)-0.1, max(y_patch)+0.1)
-        #         # plt.show()
-        #
-        #         # ============================================================
-        #         # PREPARE TABLE FOR RUPTURE EXPORT TO XML
-        #         # ============================================================
-        #
-        #         all_xyz = np.array([[x_patch[j],y_patch[j], z_patch[j]] for j in range(len(x_patch))]).flatten()
-        #         rake = np.mean(np.array(input_file.iloc[pList_fil, 9])[cluster_loc])
-        #         table_rupture.append([c + 1, i, rate, rake, " ".join(map(str, all_xyz))])
-        #
-        # all_slips_removed = [x for xs in all_slips_removed for x in xs]
-        # table_rupture = np.array(table_rupture, dtype=object)
-        #
-        #
-        # ------------------------------------------------------------
-        # PARSE THE RUPTURES AND CONVERT THEM TO XML FOR OPENQUAKE
-        # -----------------------------------------------------------
-        # The xml file with the ruptures will be stored in the path defined
-        # in the "path_in" variable.
+        thr_M = [6, 6.5, 7, 7.5, 8]
+        labs = ["M6-6.4","M6.5-6.9","M7-7.4", "M>=7.5"]
+        alphas = [0.2, 0.3, 0.6, 0.9]
+        depths = np.arange(-20, 0, 1)
+        for ms in range(len(thr_M)-1):
+            loc_M = np.where((all_magnitudes>=thr_M[ms])&(all_magnitudes<thr_M[ms+1]))[0]
+            num = all_z[loc_M]
+            plt.hist(-all_z[loc_M], bins=depths, label = labs[ms], orientation="horizontal", density=False, alpha=alphas[ms], color="blue" )
+            plt.legend()
+        plt.xscale('log')
+        plt.xlabel("Hypocenter count")
+        plt.ylabel("Depth (km)")
+        plt.show()
 
-        ruptures = parse_ruptures(table_rupture)
-        create_xml(ruptures, folder + '/ruptures_filt.xml')
-        ruptures1 = parse_ruptures(table_rupture1)
-        create_xml(ruptures1, folder + '/ruptures_unfilt.xml')
+        for ms in range(len(thr_M)-1):
+            loc_M = np.where((all_magnitudes>=thr_M[ms])&(all_magnitudes<thr_M[ms+1]))[0]
+            num = centroid_z_re_all[loc_M]
+            plt.hist(-centroid_z_re_all[loc_M], bins=depths, label = labs[ms], orientation="horizontal", density=False, alpha=alphas[ms], color="blue" )
+            plt.legend()
+        plt.xscale('log')
+        plt.xlabel("Centroid count")
+        plt.ylabel("Depth (km)")
+        plt.show()
 
-        print(f"Successfully converted {len(ruptures)} ruptures to XML format.")
-        print(f"Successfully converted {len(ruptures1)} ruptures to XML format.")
-        #
-        # # ============================================================
-        # # PLOT CHANGES IN CATALOGUE AFTER FILTERING
-        # # ============================================================
-        #
-        # # ==> Only activate in case you need to visualize
-        #
-        # # plt.hist(all_slips_removed, bins=100)
-        # # plt.xlabel("Slip(m)")
-        # # plt.ylabel("Count")
-        # # plt.title(folder_name)
-        # # plt.show()
-        # #
-        # # plt.scatter(magnitudes, changes)
-        # # plt.xlabel("Mw")
-        # # plt.ylabel("magnitude change")
-        # # plt.title(folder_name)
-        # # plt.show()
-        # #
-        # # plt.scatter(np.linspace(1, len(changes), len(changes)), magnitudes, label="unfiltered")
-        # # plt.scatter(np.linspace(1, len(changes), len(changes)), magnitudes_filt, label="filtered")
-        # # plt.xlabel("rupture #")
-        # # plt.ylabel("magnitudes")
-        # # plt.title(folder_name)
-        # # plt.show()
-        # #
-        # # plt.scatter(np.linspace(1, len(changes), len(changes)), all_removed)
-        # # plt.xlabel("rupture #")
-        # # plt.ylabel("number of removed patches")
-        # # plt.title(folder_name)
-        # # plt.show()
-        # #
-        # # # Recalculate MFD
-        # #
-        # # m_range_2 = np.arange(m_filtering, 9.1, 0.1)
-        # # hist_sim, _ = np.histogram(M_filter, bins=m_range_2)
-        # # hist_ini, _ = np.histogram(magnitudes, bins=m_range_2)
-        # # hist_filt, _ = np.histogram(magnitudes_filt, bins=m_range_2)
-        # #
-        # # # plt.scatter(m_range_2[:-1], np.flip(np.cumsum(hist_sim[::-1])), label="Mw-mcqsim")
-        # # plt.plot(m_range_2[:-1], np.flip(np.cumsum(hist_ini[::-1])), label="Mw-unfilt")
-        # # plt.plot(m_range_2[:-1], np.flip(np.cumsum(hist_filt[::-1])), label="Mw-filt")
-        # # plt.hist(magnitudes, bins=m_range_2, color="grey", alpha=0.5, label="Mw-unfilt")
-        # # plt.hist(magnitudes_filt, bins=m_range_2, color="grey", alpha=0.8, label="Mw-filt")
-        # # plt.xlabel("Mw")
-        # # plt.ylabel("EQ count")
-        # # plt.yscale('log')
-        # # plt.title(folder_name)
-        # # plt.legend()
-        # # # plt.xlim(5.5, 7.2)
-        # # plt.show()
+
+
+
+        # Plot Gutenberg Richter
+        m_range_1 = np.arange(6, 8.1, 0.1)
+        cum_rate = np.flip(np.cumsum(hist_after[::-1]/time_window))[np.where(mag_range==6)[0][0]]
+        a = np.log10(cum_rate)+1*6
+        a_real = np.log10(cum_rate) + abs(b) * 6
+        N = 10**(a-1*m_range_1)
+        N_actual = 10**(a_real-abs(b)*m_range_1)
+
+        fig, ax1 = plt.subplots()
+
+        ax1.scatter(mag_range[:-1], hist_after/time_window, c="grey")
+        ax1.scatter(mag_range[:-1], np.flip(np.cumsum(hist_after[::-1]/time_window)), c="black")
+        ax1.plot(mag_range[:-1], np.flip(np.cumsum(hist_after[::-1]/time_window)), c="black")
+        ax1.plot(m_range_1, N, c="grey", linestyle="--", label="theoretical b=1")
+        ax1.plot(m_range_1, N_actual, c="red", linestyle="--", label="real b="+str(round(b,2)))
+        ax1.set_xlim(5, 8)
+        ax1.set_yscale('log')
+        plt.legend()
+        plt.grid("on", which="major", linestyle=":", zorder=0)
+        plt.xlabel("Magnitude (Mw)")
+        plt.ylabel("Cumulative earthquake rate")
+        plt.show()
