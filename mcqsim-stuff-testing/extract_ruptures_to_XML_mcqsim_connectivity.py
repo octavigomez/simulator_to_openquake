@@ -506,7 +506,7 @@ for folder_name in natsort.natsorted(os.listdir(path_in)):
                     components = list(nx.connected_components(G))
                     components = [np.array([float (i) for i in j]) for j in components]
                     #print(components)
-
+                    #
                     # plt.scatter(np.array(x_patch_utm)[cluster_loc], np.array(y_patch_utm)[cluster_loc], c="black")
                     # plt.show()
 
